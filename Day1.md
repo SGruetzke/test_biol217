@@ -15,3 +15,13 @@ To `make a new folder` use this code
 ```
 mkdir foldername
 ```
+
+# Links
+
+[Github](https://github.com/SGruetzke/test_biol217) 
+
+[Name](Link)
+
+# Pictures
+
+![image](./resources/anvi-interactive.jpg)

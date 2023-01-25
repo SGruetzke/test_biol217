@@ -9,6 +9,10 @@ Metagenome: hole Genes -> wrong to say amplicon Metagenomic
 
 https://github.com/AammarTufail/Bioinformatics_Master_Module2023/blob/main/Day-2/Tutorial_Day2.md
 
+### **Data**
+
+https://ami-journals.onlinelibrary.wiley.com/doi/full/10.1111/1751-7915.13313
+
 ### **Miniconda**
 
 module load miniconda3/4.7.12.1
