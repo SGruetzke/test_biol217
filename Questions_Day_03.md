@@ -1,4 +1,4 @@
-# Questions Day 2
+# Questions Day 3
 
 ## Question 1
 
