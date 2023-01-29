@@ -47,24 +47,28 @@ to save it:
 ```
 (anvio-7.1) [sunam232@caucluster2 Day5]$ sbatch anviscript 
 ```
-Skript:
+Script:
 ```
 #summarize
 #anvi-summarize -c /work_beegfs/sunam232/Day5/contigs.db -p /work_beegfs/sunam232/Day5/5_anvio_profiles/merged_profiles/PROFILE.db -C consolidated_bins -o SUMMARY_02 --just-do-it
 ```
+Terminal 1
 ```
 (anvio-7.1) [sunam232@caucluster2 bin_by_bin]$ cp /work_beegfs/sunam232/Day5/5_anvio_profiles/SUMMARY_FINAL/bin_by_bin/Bin_METABAT__25/*.fa /work_beegfs/sunam232/Day5/5_anvio_profiles/ARCHAEA_BIN_REFINEMENT/
 ```
 ```
 (anvio-7.1) [sunam232@caucluster2 bin_by_bin]$ cp /work_beegfs/sunam232/Day5/5_anvio_profiles/SUMMARY_FINAL/bin_by_bin/Bin_Bin_1_sub/*.fa /work_beegfs/sunam232/Day5/5_anvio_profiles/ARCHAEA_BIN_REFINEMENT/
-```
+
 sbatch anviscript 
+```
+Script:
 ```
 #GUNC
 cd /work_beegfs/sunam232/Day5/5_anvio_profiles/ARCHAEA_BIN_REFINEMENT/
 mkdir GUNC
 for i in *.fa; do gunc run -i "$i" -r /home/sunam226/Databases/gunc_db_progenomes2.1.dmnd --out_dir GUNC --threads 10 --detailed_output; done
 ```
+Terminal 1
 ```
 (anvio-7.1) [sunam232@caucluster2 Day5]$ srun --reservation=biol217 --pty --mem=10G --nodes=1 --tasks-per-node=1 --cpus-per-task=1 /bin/bash
 (base) [sunam232@node002 Day5]$ conda activate /home/sunam225/miniconda3/miniconda4.9.2/usr/etc/profile.d/conda.sh/envs/anvio-7.1
@@ -79,6 +83,7 @@ Firefox
 ```
 http://127.0.0.1:8060
 ```
+Terminal 1
 ```
 (anvio-7.1) [sunam232@caucluster2 Day5]$ sbatch anviscript 
 #anvi-run
@@ -97,7 +102,7 @@ Output in output-folder
 #summarize
 anvi-summarize -c /work_beegfs/sunam232/Day5/contigs.db -p /work_beegfs/sunam232/Day5/5_anvio_profiles/merged_profiles/PROFILE.db -C consolidated_bins -o SUMMARY_03 --just-do-it
 ```
-##notes
+## notes
 bam -> binning -> bins -> refine (3 steps: combination of binners, chimeras, reassembly) -> Taxonomy ANI 
 
 
