@@ -17,6 +17,7 @@ COLLECTIONS FOUND
 * consolidated_bins (41 bins, representing 13825 items).
 * METABAT (48 bins, representing 8943 items).
 ```
+Terminal 1
 ```
 (anvio-7.1) [sunam232@caucluster2 5_anvio-profiles]$ srun --reservation=biol217 --pty --mem=10G --nodes=1 --tasks-per-node=1 --cpus-per-task=1 --partition=all /bin/bash
 [sunam232@node010 5_anvio-profiles]$ conda activate /home/sunam225/miniconda3/miniconda4.9.2/usr/etc/profile.d/conda.sh/envs/anvio-7.1
