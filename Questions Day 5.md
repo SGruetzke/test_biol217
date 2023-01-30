@@ -7,13 +7,13 @@
 
   - The METABAT data are not chimeric
   - The CONCOT data are chimeric on kingdom, phylum and class level
-  - `what is a chimeric bin?`
+  - A chimeric bin contains contigs of different taxa
 
 
 
 ## Questions
 
-Does the quality of your Arrchaea improve?
+Does the quality of your Archaea improve?
 hint: look at completeness redundancy in the interface of anvio and submit info of before and after
 Submit your output Figure
 The completeness decreases from 97.37% to 93.4%. The Redundance did not change (5.3). The obvious low quality were removed, so the quality should be a little bit better. But we can not see changes in the Redundance as a marker for the quality.
