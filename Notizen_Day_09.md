@@ -50,7 +50,18 @@ View(shf)
 ggplot(data = shf, aes(x=seq_type, y=identifier, fill=log2fold_change)) + geom_tile() + scale_fill_gradient(low = 'lightblue', high = 'darkblue', guide= 'colorbar') + theme(axis.text.y=element_blank())
 # theme: remove names
 ```
+
+table for rhe first heatmap 
+- data rearranged from significant data
+- just data with names
+  
 ![pic](resources/table_heatmap_01.png)
 ![pic](resources/heatmap_01.svg)
+
+heatmap with all of the significant data 
+
 ![pic](resources/heatmap_02.svg)
+
+heatmap with removed names
+
 ![pic](resources/heatmap_03.svg)
