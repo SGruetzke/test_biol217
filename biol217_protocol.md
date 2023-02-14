@@ -79,8 +79,11 @@ Every job script starts with the directive #!/bin/bash on the first line. In the
 * use ressources reserved for course 
 
 The job parameters are followed by the command lines for the job.
-Our comand line for quality control looked like this: for i in *.gz; do fastqc $i; done
-Since the same command was to be executed for several files, a loop was used in which fastqc was applied to all files with the .gz extension. -o always specifies where the newly acquired data should be stored (output folder).
+Our comand line for quality control looked like this: 
+```
+for i in *.gz; do fastqc $i; done
+```
+Since the same command was to be executed for several files, a loop was used in which fastqc was applied to all files with the .gz extension (`for i in *.gz; do`). -o always specifies where the newly acquired data should be stored (output folder).
 
 ### **Script (fastqc)**
 
