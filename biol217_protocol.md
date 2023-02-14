@@ -146,9 +146,13 @@ done
 ```
 
 ## Assembly
-
+We use our fastp processed data and perform genome assemblies using megahit (an ultra-fast and memory-efficient Next Generation Sequencing assembler, optimized for metagenomes).
 
 ### **Script (megahit)**
+We do a coassembly (multiple samples).
+* -1 path to R1 file
+* -2 path to R2 file, for paired end readings only
+
 
 ```
 #!/bin/bash
@@ -163,7 +167,6 @@ done
 #SBATCH --reservation=biol217
 
 
-
 #megahit
 
 cd /work_beegfs/sunam232/day_02/clean
@@ -172,6 +175,16 @@ cd /work_beegfs/sunam232/day_02/clean
 megahit -1 BGR_130305_R1.fastq.gz -1 BGR_130527_R1.fastq.gz -1 BGR_130708_R1.fastq.gz -2 BGR_130305_R2.fastq.gz -2 BGR_130527_R2.fastq.gz -2 BGR_130708_R2.fastq.gz --min-contig-len 1000 --presets meta-large -m 0.85 -o /work_beegfs/sunam232/day_02/assembly -t 20                      
 
 ```
+
+Now we had the contigs. To visualize them in Bandage we had to change the format from fa to fastg:
+```
+megahit_toolkit contig2fastg 99 final.contigs.fa > final.contigs.fastg                   
+```
+Then the FASTG file k99.fastg can be loaded into Bandage.
+
+### Visualisation in Bandage
+
+
 
 # **Day 3 - From raw reads to contigs**
 
