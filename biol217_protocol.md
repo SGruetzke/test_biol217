@@ -32,7 +32,16 @@ remove directory
 ```
 rmdir day_01
 ```
-
+* is a wildcard. For example, if you want to copy all the text files to a directory, the command could be like this:
+```
+cp *.txt day_01
+```
+editing files
+```
+cat >> test.txt #command
+This is a test file. #write the text
+# press ctrl + C 
+```
 
 
 # **Day 2 - From raw reades to contigs**
