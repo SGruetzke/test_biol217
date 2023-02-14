@@ -51,15 +51,36 @@ cat test.txt test02.txt
 # **Day 2 - From raw reades to contigs**
 
 ## **Data**
-https://ami-journals.onlinelibrary.wiley.com/doi/full/10.1111/1751-7915.13313
+* samples from mesophilic agricultural biogas plant (near Cologne, Germany)
+* over a time period of 587 days, monthly intervals
+* by high-throughput amplicon sequencing of the archaeal and bacterial 16S rRNA genes
+* https://ami-journals.onlinelibrary.wiley.com/doi/full/10.1111/1751-7915.13313
+* we focused on 3 samples in the course
 
 ## **Miniconda**
+needed packeges and programs were already installed into one conda environment which we activated:
  ```
 module load miniconda3/4.7.12.1
 conda activate anvio
-cd /work_beegfs/sunam232/day_02
-for i in *.gz; do fastqc $i; done#
  ```
+ 
+## Quality control of raw reads
+To assess the quality of the sequences, we used FastQC.
+This process is very computationally intensive, which is why we did not use the Front End. In such cases, you can use the compute nodes (which have higher computing power) by using a batch script.
+Every job script starts with the directive #!/bin/bash on the first line. In the next lines of the script, the job parameters are defined. These always begin with #SBATCH. Job parameters in the batch script for the quality control:
+* number of nodes
+* numbers of cores per task
+* Real memory required per node; G for gigabytes
+* walltime
+* jobname
+* standard output file
+* standard error file
+* Slurm partition (~batch class)
+* use ressources reserved for course 
+The job parameters are followed by the command lines for the job.
+Our comand line for quality control looked like this: for i in *.gz; do fastqc $i; done
+Since the same command was to be executed for several files, a loop was used in which fastqc was applied to all files with the .gz extension. -o always specifies where the newly acquired data should be stored (output folder).
+
 ### **Script (fastqc)**
 
 ```
@@ -68,23 +89,21 @@ for i in *.gz; do fastqc $i; done#
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=10G
 #SBATCH --time=1:00:00
-#SBATCH -D ./
+#SBATCH --job-name=fastqc
 #SBATCH --output=anviscript.out
 #SBATCH --error=anviscript.err
 #SBATCH --partition=all
 #SBATCH --reservation=biol217
 
 
-#load your anvio environment (path needs to be adjusted)
-source activate /home/sunamXXX/miniconda3/miniconda4.9.2/usr/etc/profile.d/conda.sh/envs/anvio-7.1
+for i in *.gz; do fastqc $i; done
 
-#set environmental variables here (anything you want to run multiple times)
-outdir=/work_beegfs/sunamXXX/out_dir
-meta=/work_beegfs/sunamXXX/.txt
-runname=Run2023-01-20
-trunclength=240
-`fehlt noch was`
 ```
+To start the script, enter the following command into the terminal:
+```
+sbatch fastqc
+```
+
 ### **Script (fastp)**
 
 ```
