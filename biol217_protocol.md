@@ -251,6 +251,8 @@ megahit_toolkit contig2fastg 99 final.contigs.fa > final.contigs.fastg
 
 ## Genomes Binning
 
+
+
 new Terminal not on CAU Cluster
 
 ```
