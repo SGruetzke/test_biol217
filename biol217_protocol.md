@@ -67,6 +67,10 @@ conda activate anvio
 ## Quality control of raw reads
 To assess the quality of the sequences, we used FastQC.
 This process is very computationally intensive, which is why we did not use the Front End. In such cases, you can use the compute nodes (which have higher computing power) by using a batch script.
+
+
+### **Script (fastqc)**
+
 Every job script starts with the directive #!/bin/bash on the first line. In the next lines of the script, the job parameters are defined. These always begin with #SBATCH. Job parameters in the batch script for the quality control:
 * number of nodes
 * numbers of cores per task
@@ -83,9 +87,7 @@ Our comand line for quality control looked like this:
 ```
 for i in *.gz; do fastqc $i; done
 ```
-Since the same command was to be executed for several files, a loop was used in which fastqc was applied to all files with the .gz extension (`for i in *.gz; do`). -o always specifies where the newly acquired data should be stored (output folder).
-
-### **Script (fastqc)**
+Since the same command was to be executed for several files, a loop was used in which fastqc was applied to all files with the .gz extension (for i in *.gz; do). -o always specifies where the newly acquired data should be stored (output folder).
 
 ```
 #!/bin/bash
@@ -109,6 +111,7 @@ sbatch fastqc
 ```
 
 ### **Script (fastp)**
+-o always specifies where the newly acquired data should be stored (output folder).
 
 ```
 #!/bin/bash
