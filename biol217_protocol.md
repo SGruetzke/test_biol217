@@ -1,7 +1,34 @@
 # Day 1 - Introduction to linux
 
-- Become familiar with the Linux terminal
+- become familiar with the Linux terminal
 - try some commands
+
+current directory
+```
+pwd
+```
+list files in current directory
+```
+ls -l
+```
+create new directory
+```
+mkdir day_01
+```
+change directory
+```
+cd day_01
+cd ../ #upwards
+```
+move file 
+```
+mv test.txt dir/day_01 
+```
+remove directory
+```
+rmdir day_01
+```
+
 
 # **Day 2 - From raw reades to contigs**
 
