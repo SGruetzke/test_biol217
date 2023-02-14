@@ -24,10 +24,15 @@ move file
 ```
 mv test.txt dir/day_01 
 ```
+copy file
+```
+cp test02.txt day_01
+```
 remove directory
 ```
 rmdir day_01
 ```
+
 
 
 # **Day 2 - From raw reades to contigs**
