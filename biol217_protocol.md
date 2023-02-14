@@ -111,6 +111,12 @@ sbatch fastqc
 ```
 
 ### **Script (fastp)**
+Process the reads with fastp using different parameters.
+* -t trim tail 1, default is 0, here 6 bases are trimmed
+* -q 20 reads with a phred score of <=20 are trimmed
+
+
+As we have paired end readings we need to specify two different inputs (-i) for R1 and R2 files.
 -o always specifies where the newly acquired data should be stored (output folder).
 
 ```
@@ -138,6 +144,10 @@ do
 
 done
 ```
+
+## Assembly
+
+
 ### **Script (megahit)**
 
 ```
