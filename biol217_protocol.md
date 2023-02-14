@@ -40,9 +40,13 @@ editing files
 ```
 cat >> test.txt #command
 This is a test file. #write the text
-# press ctrl + C 
+#press ctrl + C 
 ```
-
+merge files
+```
+cat test.txt test02.txt
+```
+`slide 39 weiterbearbeiten`
 
 # **Day 2 - From raw reades to contigs**
 
