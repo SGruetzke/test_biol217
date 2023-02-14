@@ -184,7 +184,16 @@ Then the FASTG file k99.fastg can be loaded into Bandage.
 
 ### Visualisation in Bandage
 
+#### Question 1
 
+    Please submit your generated figure and explain in your own words what you can see (keep it short).
+    
+#### Answer 1
+- you see the Contigs
+- they are sorted by size
+- you see if there are loops
+
+![Bandage](resources/Screenshot_01.png)
 
 # **Day 3 - From raw reads to contigs**
 
