@@ -182,32 +182,14 @@ megahit_toolkit contig2fastg 99 final.contigs.fa > final.contigs.fastg
 ```
 Then the FASTG file k99.fastg can be loaded into Bandage.
 
-### Visualisation in Bandage
-
-#### Question 1
-
-    Please submit your generated figure and explain in your own words what you can see (keep it short).
-    
-#### Answer 1
-- you see the Contigs
-- they are sorted by size
-- you see if there are loops
-
-![Bandage](resources/Screenshot_01.png)
 
 # **Day 3 - From raw reads to contigs**
 
 ### **folder structure**
-
-2_fastq 
-3_coassembly 
-3_metaquast 
-4_mapping 
-5_anvio_profiles
+in the beginning we created a new folder structure for the following days:
 
 
 ```
-
 ssh -X sunam232@caucluster.rz.uni-kiel.de
 cd $WORK
 mkdir day_03
@@ -219,12 +201,37 @@ mkdir 5_anvio-profiles
 cp -r /home/sunam226/Day3/* /work_beegfs/sunam232/day_03
 conda activate /home/sunam226/.conda/envs/anvio
 cd ./3_coassembly/
-grep -c ">" final.contigs.fa
-megahit_toolkit contig2fastg 99 final.contigs.fa > final.contigs.fastg
-cd ../
-sbatch anviscript_metaquast
+```
+
+To count the number of countigs in our final assembly file.
 
 ```
+grep -c ">" final.contigs.fa
+```
+
+
+### Assembly Visualisation in Bandage
+
+
+#### Question 1
+
+Please submit your generated figure and explain in your own words what you can see (keep it short).
+    
+#### Answer 1
+- you see the Contigs
+- they are sorted by size
+- you see if there are loops
+
+![Bandage](resources/Screenshot_01.png)
+
+```
+megahit_toolkit contig2fastg 99 final.contigs.fa > final.contigs.fastg
+```
+
+
+sbatch anviscript_metaquast
+
+
 
 ```
 didn´t work, results copy worked:
