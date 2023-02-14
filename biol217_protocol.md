@@ -210,7 +210,7 @@ grep -c ">" final.contigs.fa
 ```
 
 
-### Assembly Visualisation in Bandage
+## Assembly Visualisation in Bandage
 
 
 #### Question 1
@@ -228,18 +228,28 @@ Please submit your generated figure and explain in your own words what you can s
 megahit_toolkit contig2fastg 99 final.contigs.fa > final.contigs.fastg
 ```
 
+## Quality Assesment of Assemblies
+* we used QUAST (QUality ASsessment Tool) to evaluate results from megahit.
+* our batch script to run quast did not work (`metaquast -t 6 -o /work_beegfs/sunam232/day_03/3_metaquast -m 1000 final.contigs.fa`)
+* we copied the data (`cp -r /home/sunam226/Day3/3_metaquast_out/* /work_beegfs/sunam232/day_03/3_metaquast_2`)
+* opened the html file in firefox.
 
-sbatch anviscript_metaquast
+#### Question 2
+
+  1. What is your N50 value? Why is this value relevant?
+  2. How many contigs are assembled?
+  3. What is the total length of the contigs?
+
+#### Answer 2
+
+![Quast](resources/Screenshot_02.png)
+
+1.  N50: 2963; If you line up all contigs by size, the N50 value corresponds to the length of the contig, which is half of the total length. If this value is high, it is a sign of many and long contigs. If it is low, it is a sign of many short contigs. The N50 value can therefore provide a parameter for the quality of the sample.
+2.  contigs: 57414
+3.  length: 145675865
 
 
-
-```
-didn´t work, results copy worked:
-
-```
-cp -r /home/sunam226/Day3/3_metaquast_out/* /work_beegfs/sunam232/day_03/3_metaquast_2
-
-```
+## Genomes Binning
 
 new Terminal not on CAU Cluster
 
