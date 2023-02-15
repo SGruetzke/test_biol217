@@ -923,7 +923,7 @@ anvi-estimate-genome-completeness -e external-genomes.txt > genome-completeness.
 ```
 Output:
 
-![Output picture](resources/genome_completeness_.png)
+![Output picture](resources/genome_completeness.png)
 
 
 #### Question 10
