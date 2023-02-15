@@ -145,7 +145,38 @@ do
 done
 ```
 
-## Assembly
+
+
+
+# **Day 3 - From raw reads to contigs**
+
+### **folder structure**
+in the beginning we created a new folder structure for the following days:
+
+
+```
+ssh -X sunam232@caucluster.rz.uni-kiel.de
+cd $WORK
+mkdir day_03
+cd ./day_03
+mkdir 3_assembly
+mkdir 3_metaquast
+mkdir 4_mapping
+mkdir 5_anvio-profiles
+cp -r /home/sunam226/Day3/* /work_beegfs/sunam232/day_03
+conda activate /home/sunam226/.conda/envs/anvio
+cd ./3_coassembly/
+```
+
+To count the number of countigs in our final assembly file.
+
+```
+grep -c ">" final.contigs.fa
+```
+
+
+## Assembly Visualisation in Bandage
+
 We use our fastp processed data and perform genome assemblies using megahit (an ultra-fast and memory-efficient Next Generation Sequencing assembler, optimized for metagenomes).
 
 ### **Script (megahit)**
@@ -181,37 +212,6 @@ Now we had the contigs. To visualize them in Bandage we had to change the format
 megahit_toolkit contig2fastg 99 final.contigs.fa > final.contigs.fastg                   
 ```
 Then the FASTG file k99.fastg can be loaded into Bandage.
-
-
-# **Day 3 - From raw reads to contigs**
-
-### **folder structure**
-in the beginning we created a new folder structure for the following days:
-
-
-```
-ssh -X sunam232@caucluster.rz.uni-kiel.de
-cd $WORK
-mkdir day_03
-cd ./day_03
-mkdir 3_assembly
-mkdir 3_metaquast
-mkdir 4_mapping
-mkdir 5_anvio-profiles
-cp -r /home/sunam226/Day3/* /work_beegfs/sunam232/day_03
-conda activate /home/sunam226/.conda/envs/anvio
-cd ./3_coassembly/
-```
-
-To count the number of countigs in our final assembly file.
-
-```
-grep -c ">" final.contigs.fa
-```
-
-
-## Assembly Visualisation in Bandage
-
 
 #### Question 1
 
@@ -251,31 +251,86 @@ megahit_toolkit contig2fastg 99 final.contigs.fa > final.contigs.fastg
 
 ## Genomes Binning
 
-
-
-new Terminal not on CAU Cluster
+* format contigs and clean reads so that the data can be processed later by Anvio:
 
 ```
-(base) kurs@Kurs006:~$ cd Downloads/^C
-(base) kurs@Kurs006:~$ ^C
-(base) kurs@Kurs006:~$ cd Desktop/Bandage/
-(base) kurs@Kurs006:~/Desktop/Bandage$ ls
-Bandage  dependencies  sample_LastGraph
-(base) kurs@Kurs006:~/Desktop/Bandage$ ./Bandage
+anvi-script-reformat-fasta final.contigs.fa -o /work_beegfs/sunam232/day_03/3_metaquast_2/contigs.anvio.fa --min-len 1000 --simplify-names --report-file name_conversion.txt
 ```
 
-in first Terminal (CAU Cluster)
+### Mapping
 
+* map raw reads onto assembled contigs
+* with bowtie2. 
+* first index our mapping reference fasta file (batch script): 
 ```
-(anvio) [sunam232@caucluster2 day_03]$ cp -r /home/sunam226/Day3/contigs.(anvio) [sunam232@caucluster2 day_03]$ anvio.fa /work_beegfs/sunam232/day_03/4_mapping/
-(anvio) [sunam232@caucluster2 day_03]$ sbatch anviscript_binning 
-(anvio) [sunam232@caucluster2 day_03]$ sbatch anviscript_bowtie2 
-```
-abgebrochen, stattdessen heruntergeladen
+#!/bin/bash
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=10G
+#SBATCH --time=1:00:00
+#SBATCH --job-name=bowtie
+#SBATCH --output=bowtie.out
+#SBATCH --error=bowtie.err
+#SBATCH --partition=all
+#SBATCH --reservation=biol217
 
+module load bowtie2
+bowtie2-build contigs.anvio.fa contigs.anvio.fa.index
 ```
-(anvio) [sunam232@caucluster2 day_03]$ cp -r /home/sunam226/Day3/4_mapping /work_beegfs/sunam232/day_03/4_mapping
+now mapping with bowtie2:
+
+### **Script (mapping)**
+* -1 R1 fasta file containing the raw reads after fastp processing
+* -2 R2 fasta file containing the raw reads after fastp processing
+* -S name of the output file
 ```
+#!/bin/bash
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=10G
+#SBATCH --time=1:00:00
+#SBATCH --job-name=mapping
+#SBATCH --output=mapping.out
+#SBATCH --error=mapping.err
+#SBATCH --partition=all
+#SBATCH --reservation=biol217
+
+module load bowtie2
+cd /work_beegfs/sunam232/day_03/3_metaquast_2/
+for i in `ls *_R1.fastq.gz`;
+do
+    second=`echo ${i} | sed 's/_R1/_R2/g'`
+    echo bowtie2 --very-fast -x /work_beegfs/sunam232/day_03/3_metaquast_2/index -1 ${i} -2 ${second} -S /work_beegfs/sunam232/day_03/4_mapping/"$i".sam 
+done
+```
+
+since the process has broken down, we have downloaded the data
+```
+cp -r /home/sunam226/Day3/4_mapping /work_beegfs/sunam232/day_03/4_mapping
+```
+* Now we had sequence mapping files (SAM) with the .sam extension
+* next step: convert to binary alignment and map (BAM) file with the .bam extension using samtools:
+
+### **Script (samtools)**
+```
+#!/bin/bash
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=10G
+#SBATCH --time=1:00:00
+#SBATCH --job-name=samtools
+#SBATCH --output=samtools.out
+#SBATCH --error=samtools.err
+#SBATCH --partition=all
+#SBATCH --reservation=biol217
+
+module load samtools
+
+cd /work_beegfs/sunam232/day_03/4_mapping/
+for i in *.sam; do samtools view -bS $i > "$i".bam; done
+```
+
+
 
 # **Day 4 - From bins to species and abundance estimation**
 
