@@ -619,7 +619,6 @@ Firefox:
 ```
 http://127.0.0.1:8060
 ![Graphic](resources/Collection__consolidated_bins__for_merged_profiles.svg)
-![Picture](resources/Collection__consolidated_bins__for_merged_profiles.svg)
 ```
 
 close terminal & exit node
@@ -631,6 +630,8 @@ to save it:
 ```
 (anvio-7.1) [sunam232@caucluster2 5_anvio-profiles]$ anvi-estimate-genome-completeness -c /work_beegfs/sunam232/day_03/5_anvio-profiles/contigs.db -p /work_beegfs/sunam232/day_03/5_anvio-profiles/5_anvio_profiles/merged_profiles/PROFILE.db -C consolidated_bins > genome_completeness_dastool.txt 
 ```
+
+## Bin refinement
 
 
 
