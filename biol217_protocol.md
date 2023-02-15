@@ -2,6 +2,7 @@
 
 - become familiar with the Linux terminal
 - try some commands
+- The following are examples of some of these commands. Not all of them have been mentioned, as these were only the preliminary exercise for the next days of the course, which were the focus of the course.
 
 current directory
 ```
@@ -46,7 +47,7 @@ merge files
 ```
 cat test.txt test02.txt
 ```
-`slide 39 weiterbearbeiten`
+
 
 # **Day 2 - From raw reades to contigs**
 
