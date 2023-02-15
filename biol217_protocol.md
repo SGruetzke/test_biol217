@@ -582,6 +582,59 @@ anvi-summarize -p /work_beegfs/sunam232/day_03/5_anvio-profiles/5_anvio_profiles
 * Number of Archaea bins you got after consolidating the bins? **2**
 
 
+# Day 5
+
+## MAGs Quality Esimation
+Estimate our genomes completeness and contamination levels.
+
+### Check what collections we generated
+```
+anvi-estimate-genome-completeness -p /work_beegfs/sunam232/day_03/5_anvio-profiles/5_anvio_profiles/merged_profiles/PROFILE.db -c /work_beegfs/sunam232/day_03/5_anvio-profiles/contigs.db --list-collections
+```
+Output:
+```
+COLLECTIONS FOUND
+===============================================
+* CONCOCT (156 bins, representing 57626 items).
+* consolidated_bins (41 bins, representing 13825 items).
+* METABAT (48 bins, representing 8943 items).
+```
+
+ ### Visualize and evaluate our results
+* with anvi'o interactive
+
+```
+Terminal 1
+```
+(anvio-7.1) [sunam232@caucluster2 5_anvio-profiles]$ srun --reservation=biol217 --pty --mem=10G --nodes=1 --tasks-per-node=1 --cpus-per-task=1 --partition=all /bin/bash
+[sunam232@node010 5_anvio-profiles]$ conda activate /home/sunam225/miniconda3/miniconda4.9.2/usr/etc/profile.d/conda.sh/envs/anvio-7.1
+(anvio-7.1) [sunam232@node010 5_anvio-profiles]$ anvi-interactive -p /work_beegfs/sunam232/day_03/5_anvio-profiles/5_anvio_profiles/merged_profiles/PROFILE.db -c /work_beegfs/sunam232/day_03/5_anvio-profiles/contigs.db -C METABAT
+```
+New terminal:
+```
+(base) kurs@Kurs006:~$ ssh -L 8060:localhost:8080 sunam232@caucluster-old.rz.uni-kiel.de
+[sunam232@caucluster2 ~]$ ssh -L 8080:localhost:8080 node010
+```
+Firefox:
+```
+http://127.0.0.1:8060
+![Graphic](resources/Collection__consolidated_bins__for_merged_profiles.svg)
+![Picture](resources/Collection__consolidated_bins__for_merged_profiles.svg)
+```
+
+close terminal & exit node
+
+```
+(anvio-7.1) [sunam232@caucluster2 5_anvio-profiles]$ anvi-estimate-genome-completeness -c /work_beegfs/sunam232/day_03/5_anvio-profiles/contigs.db -p /work_beegfs/sunam232/day_03/5_anvio-profiles/5_anvio_profiles/merged_profiles/PROFILE.db -C consolidated_bins
+```
+to save it:
+```
+(anvio-7.1) [sunam232@caucluster2 5_anvio-profiles]$ anvi-estimate-genome-completeness -c /work_beegfs/sunam232/day_03/5_anvio-profiles/contigs.db -p /work_beegfs/sunam232/day_03/5_anvio-profiles/5_anvio_profiles/merged_profiles/PROFILE.db -C consolidated_bins > genome_completeness_dastool.txt 
+```
+
+
+
+
 
 
 
