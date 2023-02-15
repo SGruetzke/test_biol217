@@ -471,6 +471,120 @@ mkdir /work_beegfs/sunam232/day_03/5_anvio-profiles/profiling/
 for i in `ls *.sorted.bam | cut -d "." -f 1`; do anvi-profile -i "$i".bam.sorted.bam -c contigs.db -o /work_beegfs/sunam232/day_03/5_anvio-profiles/profiling/”$i”; done
 ```
 
+### Merge the profiles coming from the different samples into one profile
+With anvi-merge:
+* merge everything and create a merged profile
+* attempt to create multiple clusterings of the splits using the default clustering configurations
+
+
+### **Script (anvio_merge)**
+
+```
+#!/bin/bash
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=10G
+#SBATCH --time=1:00:00
+#SBATCH --job-name=anvio_merge
+#SBATCH --output=anvio_merge_out
+#SBATCH --error=anvio_merge.err
+#SBATCH --partition=all
+#SBATCH --reservation=biol217
+
+
+cd /work_beegfs/sunam232/day_03/5_anvio-profiles/
+anvi-merge /work_beegfs/sunam232/day_03/5_anvio-profiles/5_anvio_profiles/BGR_130305/PROFILE.db /work_beegfs/sunam232/day_03/5_anvio-profiles/5_anvio_profiles/BGR_130527/PROFILE.db /work_beegfs/sunam232/day_03/5_anvio-profiles/5_anvio_profiles/BGR_130708/PROFILE.db -o /work_beegfs/sunam232/day_03/5_anvio-profiles/5_anvio_profiles/merged_profiles_02 -c /work_beegfs/sunam232/day_03/5_anvio-profiles/contigs.db --enforce-hierarchical-clustering
+
+```
+
+### Genome binning
+
+* trying to group together a bunch of contigs that all belong to the same genome using various metrics like tetranucleotide frequency, differential coverage, completion,...
+* we used two binners: Metabat2 and CONCOCT
+* then we used DAS_Tool to choose the best bins
+
+### **Script (metabat)**
+
+* -p output folder from the last step/PROFILE.db file with the merged profiles
+* -c contig.db folder
+* -C name of the output collection that this step will create Note that this will be stored within your merged profiles and not as an extra file
+
+```
+#!/bin/bash
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=10G
+#SBATCH --time=1:00:00
+#SBATCH --job-name=metabat
+#SBATCH --output=metabat_out
+#SBATCH --error=metabat.err
+#SBATCH --partition=all
+#SBATCH --reservation=biol217
+
+
+cd /work_beegfs/sunam232/day_03/5_anvio-profiles/
+
+anvi-cluster-contigs -p /work_beegfs/sunam232/day_03/5_anvio-profiles/5_anvio_profiles/merged_profiles/PROFILE.db -c /work_beegfs/sunam232/day_03/5_anvio-profiles/contigs.db -C METABAT --driver metabat2 --just-do-it --log-file log-metabat2
+
+anvi-summarize -p /work_beegfs/sunam232/day_03/5_anvio-profiles/5_anvio_profiles/merged_profiles/PROFILE.db -c /work_beegfs/sunam232/day_03/5_anvio-profiles/contigs.db -o SUMMARY_METABAT -C METABAT
+```
+
+### **Script (concoct)**
+
+```
+#!/bin/bash
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=10G
+#SBATCH --time=1:00:00
+#SBATCH --job-name=concot
+#SBATCH --output=concoct_out
+#SBATCH --error=concoct.err
+#SBATCH --partition=all
+#SBATCH --reservation=biol217
+
+
+cd /work_beegfs/sunam232/day_03/5_anvio-profiles/
+
+anvi-cluster-contigs -p /work_beegfs/sunam232/day_03/5_anvio-profiles/5_anvio_profiles/merged_profiles/PROFILE.db -c /work_beegfs/sunam232/day_03/5_anvio-profiles/contigs.db -C CONCOCT --driver concoct --just-do-it
+
+anvi-summarize -p /work_beegfs/sunam232/day_03/5_anvio-profiles/5_anvio_profiles/merged_profiles/PROFILE.db -c /work_beegfs/sunam232/day_03/5_anvio-profiles/contigs.db -o SUMMARY_CONCOCT -C CONCOCT
+```
+
+### Consolidating bins with DASTool
+
+
+### **Script (dastool)**
+
+```
+#!/bin/bash
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=10G
+#SBATCH --time=1:00:00
+#SBATCH --job-name=dastool
+#SBATCH --output=dastool_out
+#SBATCH --error=dastool.err
+#SBATCH --partition=all
+#SBATCH --reservation=biol217
+
+
+cd /work_beegfs/sunam232/day_03/5_anvio-profiles/
+
+anvi-cluster-contigs -p /work_beegfs/sunam232/day_03/5_anvio-profiles/5_anvio_profiles/merged_profiles/PROFILE.db -c /work_beegfs/sunam232/day_03/5_anvio-profiles/contigs.db -C consolidated_bins --driver dastool -T 20 --search-engine diamond -S METABAT,CONCOCT --log-file log_consolidation_of_bins --just-do-it
+
+anvi-summarize -p /work_beegfs/sunam232/day_03/5_anvio-profiles/5_anvio_profiles/merged_profiles/PROFILE.db -c /work_beegfs/sunam232/day_03/5_anvio-profiles/contigs.db -o SUMMARY_consolidated_bins -C consolidated_bins
+```
+#### Question 3
+
+* Number of Archaea bins you got from MetaBAT2? **3**
+* Number of Archaea bins you got from CONCOCT? **2**
+* Number of Archaea bins you got after consolidating the bins? **2**
+
+
+
+
+
 
 
 
