@@ -603,17 +603,16 @@ COLLECTIONS FOUND
  ### Visualize and evaluate our results
 * with anvi'o interactive
 
-```
 Terminal 1
 ```
-(anvio-7.1) [sunam232@caucluster2 5_anvio-profiles]$ srun --reservation=biol217 --pty --mem=10G --nodes=1 --tasks-per-node=1 --cpus-per-task=1 --partition=all /bin/bash
-[sunam232@node010 5_anvio-profiles]$ conda activate /home/sunam225/miniconda3/miniconda4.9.2/usr/etc/profile.d/conda.sh/envs/anvio-7.1
-(anvio-7.1) [sunam232@node010 5_anvio-profiles]$ anvi-interactive -p /work_beegfs/sunam232/day_03/5_anvio-profiles/5_anvio_profiles/merged_profiles/PROFILE.db -c /work_beegfs/sunam232/day_03/5_anvio-profiles/contigs.db -C METABAT
+srun --reservation=biol217 --pty --mem=10G --nodes=1 --tasks-per-node=1 --cpus-per-task=1 --partition=all /bin/bash
+conda activate /home/sunam225/miniconda3/miniconda4.9.2/usr/etc/profile.d/conda.sh/envs/anvio-7.1
+anvi-interactive -p /work_beegfs/sunam232/day_03/5_anvio-profiles/5_anvio_profiles/merged_profiles/PROFILE.db -c /work_beegfs/sunam232/day_03/5_anvio-profiles/contigs.db -C METABAT
 ```
 New terminal:
 ```
-(base) kurs@Kurs006:~$ ssh -L 8060:localhost:8080 sunam232@caucluster-old.rz.uni-kiel.de
-[sunam232@caucluster2 ~]$ ssh -L 8080:localhost:8080 node010
+ssh -L 8060:localhost:8080 sunam232@caucluster-old.rz.uni-kiel.de
+ssh -L 8080:localhost:8080 node010
 ```
 Firefox:
 ```
@@ -624,16 +623,115 @@ http://127.0.0.1:8060
 close terminal & exit node
 
 ```
-(anvio-7.1) [sunam232@caucluster2 5_anvio-profiles]$ anvi-estimate-genome-completeness -c /work_beegfs/sunam232/day_03/5_anvio-profiles/contigs.db -p /work_beegfs/sunam232/day_03/5_anvio-profiles/5_anvio_profiles/merged_profiles/PROFILE.db -C consolidated_bins
+anvi-estimate-genome-completeness -c /work_beegfs/sunam232/day_03/5_anvio-profiles/contigs.db -p /work_beegfs/sunam232/day_03/5_anvio-profiles/5_anvio_profiles/merged_profiles/PROFILE.db -C consolidated_bins
 ```
 to save it:
 ```
-(anvio-7.1) [sunam232@caucluster2 5_anvio-profiles]$ anvi-estimate-genome-completeness -c /work_beegfs/sunam232/day_03/5_anvio-profiles/contigs.db -p /work_beegfs/sunam232/day_03/5_anvio-profiles/5_anvio_profiles/merged_profiles/PROFILE.db -C consolidated_bins > genome_completeness_dastool.txt 
+anvi-estimate-genome-completeness -c /work_beegfs/sunam232/day_03/5_anvio-profiles/contigs.db -p /work_beegfs/sunam232/day_03/5_anvio-profiles/5_anvio_profiles/merged_profiles/PROFILE.db -C consolidated_bins > genome_completeness_dastool.txt 
 ```
 
 ## Bin refinement
+* focus on Archaea bins
+* use anvi-summarize to give an overview of the statistics anvi'o has calculated
 
 
+### **Script (anvi_summarize)**
+
+```
+#!/bin/bash
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=10G
+#SBATCH --time=1:00:00
+#SBATCH --job-name=anvi_summarize
+#SBATCH --output=anvi_summarize_out
+#SBATCH --error=anvi_summarize.err
+#SBATCH --partition=all
+#SBATCH --reservation=biol217
+
+anvi-summarize -c /work_beegfs/sunam232/Day5/contigs.db -p /work_beegfs/sunam232/Day5/5_anvio_profiles/merged_profiles/PROFILE.db -C consolidated_bins -o SUMMARY_02 --just-do-it
+
+```
+Terminal 1
+```
+
+cp /work_beegfs/sunam232/Day5/5_anvio_profiles/SUMMARY_FINAL/bin_by_bin/Bin_METABAT__25/*.fa /work_beegfs/sunam232/Day5/5_anvio_profiles/ARCHAEA_BIN_REFINEMENT/
+
+cp /work_beegfs/sunam232/Day5/5_anvio_profiles/SUMMARY_FINAL/bin_by_bin/Bin_Bin_1_sub/*.fa /work_beegfs/sunam232/Day5/5_anvio_profiles/ARCHAEA_BIN_REFINEMENT/
+```
+
+### Chimera detection in MAGs
+with GUNC (Genome UNClutter)
+* tool for detection of chimerism and contamination in prokaryotic genomes resulting from mis-binning of genomic contigs from unrelated lineages
+
+activate environment:
+```
+conda activate gunc
+```
+### **Script (GUNC)**
+
+```
+#!/bin/bash
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=10G
+#SBATCH --time=1:00:00
+#SBATCH --job-name=GUNC
+#SBATCH --output=anvi_GUNC
+#SBATCH --error=anvi_GUNC
+#SBATCH --partition=all
+#SBATCH --reservation=biol217
+
+cd /work_beegfs/sunam232/Day5/5_anvio_profiles/ARCHAEA_BIN_REFINEMENT/
+mkdir GUNC
+for i in *.fa; do gunc run -i "$i" -r /home/sunam226/Databases/gunc_db_progenomes2.1.dmnd --out_dir GUNC --threads 10 --detailed_output; done
+
+```
+
+#### Question 4
+Do you get Archaea bins that are chimeric?
+
+In your own words (2 sentences max), explain what is a chimeric bin.
+
+#### Answer 4
+
+* The METABAT data are not chimeric
+* The CONCOCT data are chimeric on kingdom, phylum and class level
+* A chimeric bin contains contigs of different taxa, because the genomes were wrongly assembled out of two or more genomes coming from separate organisms.
+
+
+### Manual bin refinement
+
+* As large metagenome assemblies can result in hundreds of bins, we pre-selected the better ones for manual refinement.
+* with anvi-interactive
+
+Terminal 1
+```
+srun --reservation=biol217 --pty --mem=10G --nodes=1 --tasks-per-node=1 --cpus-per-task=1 /bin/bash
+conda activate /home/sunam225/miniconda3/miniconda4.9.2/usr/etc/profile.d/conda.sh/envs/anvio-7.1
+anvi-refine -c /work_beegfs/sunam232/Day5/contigs.db -C consolidated_bins -p /work_beegfs/sunam232/Day5/5_anvio_profiles/merged_profiles/PROFILE.db --bin-id Bin_METABAT__25
+```
+Terminal 2
+```
+ssh -L 8060:localhost:8080 sunam232@caucluster-old.rz.uni-kiel.de
+ssh -L 8080:localhost:8080 node010
+```
+Firefox
+```
+http://127.0.0.1:8060
+```
+
+#### Question 5
+Does the quality of your Archaea improve?
+hint: look at completeness redundancy in the interface of anvio and submit info of before and after
+Submit your output Figure
+
+#### Answer 4
+The completeness decreases from 97.37% to 93.4%. The Redundance did not change (5.3). The obvious low quality were removed, so the quality should be a little bit better. But we can not see changes in the Redundance as a marker for the quality.
+
+![Table1](resources/Table_Bin_Bin.png)
+![Table2](resources/Table_Bin_METABAT.png)
+![Refining_bin_METABAT](resources/Refining_Bin_METABAT__25_from__consolidated_bins_.svg)
 
 
 
