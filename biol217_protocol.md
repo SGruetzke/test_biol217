@@ -1049,9 +1049,49 @@ http://127.0.0.1:8060
 ![pangenome](resources/Pangenome_output_raw.png)
 
 
+### Interpreting and ordering the pangenome (interactive interface)
 
 
+#### Question 12
+Based on the frequency clustering of genes, do you think all genomes are related? Why?
 
+#### Answer 12
+I don't think so. The phylogenetic tree is splitted into two lineages.
+
+#### Question 13
+How does the reference genome compare to its closest bin? Tip: Consider the genome depiction and layers above
+#### Answer 13
+There are are a lot of similarities but also differences. So you can see that they are phylogenetic close to each other.
+![picture](resources/pangenome_Answer_4.png)
+
+#### Question 14
+What ranges are used determine a prokaryotic species? How high can you go until you see changes in ANI? What does the ANI clustering tell you about genome relatedness?
+#### Answer 14
+> 95 % we talk about different species. You don't see changes until 0.98 between Methano Bin9 and Methano Mflavescens. If there is the same colour at 95 % or less it is the same species. So we have one bin which is closely related to the genome: Bin9.
+
+#### Question 15
+How are Methanogenesis genes distributed across the genome?
+
+#### Answer 15
+They are distributed almost over the hole genome. Behind the SCG-part is a hole where is just one Methanogenesis.
+
+![picture](resources/pangenomes.png)
+
+#### Question 16
+What observations can you make regarding the geometric homogeneity between all genomes and the functional homogeneity?
+
+#### Answer 16
+The geometric homogeneity and functional homogeneity are between Methano_Bin9 and Methano_Mflavescens the same and between the four others the same. Between the both groups are some differents but not a lot. So you see the relationships in such conserved genes.
+
+![picture](resources/gene.png)
+
+
+## Bonus
+#### Question 17
+Can the organism do methanogenesis? Does it have genes similar to a bacterial secretion system?
+
+#### Answer 17
+Yes and yes
 
 
 
