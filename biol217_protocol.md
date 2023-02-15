@@ -860,7 +860,6 @@ ssh -L 8080:localhost:8080 node010
 How do the MAGs compare in size and number of contigs to the full genome?
 
 #### Answer 7
-![Table1](resources/genome_completeness.png)
 
 The full genome has just one contig with a length of 3,283,688. The MAGs have a number of contigs between 137 and 334. The legth of the different contigs is diverse between the different MAGs. There are a few with a length above 50 kb. The most are shorter than 5 kb.
 
@@ -873,7 +872,66 @@ Based on the contig numbers, sizes and number of marker genes (HMM hits), which 
 With the highest number of contigs but very short contigs Bin5 is the worst. The best ones are Bin13 (longest contigs and not many contigs and big genome) and Bin 19 (big genome and long contigs)
 
 
+## Making a Pangenome
 
+* pangenome visualizes entire genomes for comparisson.
+* can show essential and accessory gene clusters, phylogenetic relationships and genome qualities
+
+### Creating an external genome file
+
+* to tell the programm which genomes and MAGs it should use, we created the "external genomes file"
+* contains one column with the genome/bin name and one with its path (where it is saved).
+
+```
+anvi-script-gen-genomes-file --input-dir ../02_contigs-dbs/  -o external-genomes.txt
+```
+
+
+```
+(anvio-7.1) [sunam232@caucluster2 03_pangenome]$ cat external-genomes.txt 
+```
+Output:
+```
+name	contigs_db_path
+Methano_Bin1	/work_beegfs/sunam232/Day6/02_contigs-dbs/Bin1.db
+Methano_Bin10	/work_beegfs/sunam232/Day6/02_contigs-dbs/Bin10.db
+Methano_Bin13	/work_beegfs/sunam232/Day6/02_contigs-dbs/Bin13.db
+Methano_Bin3	/work_beegfs/sunam232/Day6/02_contigs-dbs/Bin3.db
+Methano_Bin5	/work_beegfs/sunam232/Day6/02_contigs-dbs/Bin5.db
+Methano_Bin8	/work_beegfs/sunam232/Day6/02_contigs-dbs/Bin8.db
+Methano_Bin9	/work_beegfs/sunam232/Day6/02_contigs-dbs/Bin9.db
+Methano_Mflavescens	/work_beegfs/sunam232/Day6/02_contigs-dbs/Mflavescens.db
+```
+
+Output:
+
+![Output picture](resources/genome_completeness_Terminal.png)
+
+
+
+### Estimate genome completeness
+
+To avoid adding bad bins or incomplete genomes to the pangenome, we estimate
+genome completeness. So we get information on the quality of your MAGs and genomes.
+
+#### Question 09
+
+The command provides its output as a table to the standard output of the terminal. What can
+you add to the code to direct output to, e.g. a .txt file?
+```
+anvi-estimate-genome-completeness -e external-genomes.txt > genome-completeness.txt
+```
+Output:
+
+![Output picture](resources/genome_completeness_.png)
+
+
+#### Question 10
+How do the bins compare to isolate genomes? Would you remove one, based on the output of the completeness estimation?
+
+#### Answer 10
+
+remove over 10% redundancy and under 70% completeness: Bin_10 and Bin_5
 
 
 
