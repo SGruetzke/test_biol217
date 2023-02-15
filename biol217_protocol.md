@@ -935,6 +935,121 @@ remove over 10% redundancy and under 70% completeness: Bin_10 and Bin_5
 
 
 
+### Remove unwanted genomes
+
+* created new Folder in 02_contigs.db : discarded 
+* move Bin_10 und Bin_5 in discarded
+
+recreate external genomes file without unwanted genomes
+```
+anvi-script-gen-genomes-file --input-dir ../02_contigs-dbs/  -o external-genomes_02.txt
+```
+
+### Creating pangenome database
+In anvi'o generate two artifacts:
+
+* first: genomes-storage.db, which corresponds to an individual contigs.db, but merges all individual genomes we
+were working with into one database
+* The database contains:
+   1. all genome fasta files
+   2. the gene annotations (HMMs, SCGs) which were added before
+   3. any new annotations and genome comparisons we will make
+   
+* second: pan-genome.db
+* This will contain:
+   1. genome similarities based on gene amino acid sequences.
+   2. resolved gene clusters
+   3. any post-analysis of gene clusters, downstream analyses and visualisations
+
+### **Script (pangenome)**
+```
+#!/bin/bash
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=10
+#SBATCH --mem=500M
+#SBATCH --time=00:05:00
+#SBATCH --job-name=./03_pangenome
+#SBATCH --output=./03_pangenome.out
+#SBATCH --error=./03_pangenome.out
+#SBATCH --partition=all
+#SBATCH --reservation=biol217
+
+
+
+# for pangenome
+conda activate /home/sunam225/miniconda3/miniconda4.9.2/usr/etc/profile.d/conda.sh/envs/anvio-7.1
+
+# set working directory by navigating there
+cd ./03_pangenome/
+
+# Insert your command here
+anvi-gen-genomes-storage -e /work_beegfs/sunam232/Day6/03_pangenome/external-genomes_02.txt -o methano-storage-GENOMES.db
+
+anvi-pan-genome -g methano-storage-GENOMES.db --project-name genomes-storage_Archaea --num-threads 10
+```
+
+
+### Genome similarity based on average nucleotide identity (ANI)
+### **Script (ANI)**
+```
+#!/bin/bash
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=10
+#SBATCH --mem=600M
+#SBATCH --time=00:02:00
+#SBATCH --job-name=./ANI
+#SBATCH --output=./ANI.out
+#SBATCH --error=./ANI.out
+#SBATCH --partition=all
+#SBATCH --reservation=biol217
+
+
+
+# for pangenome
+conda activate /home/sunam225/miniconda3/miniconda4.9.2/usr/etc/profile.d/conda.sh/envs/anvio-7.1
+
+# set working directory by navigating there
+cd ./03_pangenome/
+
+# Insert your command here
+
+anvi-compute-genome-similarity --external-genomes external-genomes_02.txt --program pyANI --output-dir ANI --num-threads 10 --pan-db ./genomes-storage_Archaea/genomes-storage_Archaea-PAN.db
+
+```
+
+### Visualizing the pangenome
+```
+srun --pty --mem=10G --nodes=1 --tasks-per-node=1 --cpus-per-task=1 --reservation=biol217 --partition=all /bin/bash
+conda activate /home/sunam225/miniconda3/miniconda4.9.2/usr/etc/profile.d/conda.sh/envs/anvio-7.1
+anvi-display-pan -h
+```
+
+#### Question 11
+Scroll to the top of the help and find out which INPUT FILES you need. Write the command and use the additional flag -P. What is the -P flag for?
+
+#### Answer 11
+that we can use different ports, that we don't mix up our data
+
+
+```
+anvi-display-pan -p ./03_pangenome/genomes-storage_Archaea/genomes-storage_Archaea-PAN.db -g ./03_pangenome/methano-storage-GENOMES.db -P 8088
+
+```
+### Terminal 2
+```
+ssh -L 8060:localhost:8080 sunam232@caucluster-old.rz.uni-kiel.de 
+ssh -L 8088:localhost:8088 node010
+
+```
+### Firefox
+
+http://127.0.0.1:8060
+
+### Output
+![pangenome](resources/Pangenome_output_raw.png)
+
+
+
 
 
 
