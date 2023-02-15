@@ -677,8 +677,8 @@ conda activate gunc
 #SBATCH --mem=10G
 #SBATCH --time=1:00:00
 #SBATCH --job-name=GUNC
-#SBATCH --output=anvi_GUNC
-#SBATCH --error=anvi_GUNC
+#SBATCH --output=GUNC
+#SBATCH --error=GUNC
 #SBATCH --partition=all
 #SBATCH --reservation=biol217
 
@@ -726,12 +726,153 @@ Does the quality of your Archaea improve?
 hint: look at completeness redundancy in the interface of anvio and submit info of before and after
 Submit your output Figure
 
-#### Answer 4
+#### Answer 5
 The completeness decreases from 97.37% to 93.4%. The Redundance did not change (5.3). The obvious low quality were removed, so the quality should be a little bit better. But we can not see changes in the Redundance as a marker for the quality.
 
 ![Table1](resources/Table_Bin_Bin.png)
 ![Table2](resources/Table_Bin_METABAT.png)
 ![Refining_bin_METABAT](resources/Refining_Bin_METABAT__25_from__consolidated_bins_.svg)
+
+
+
+## Taxonomic assignment
+* add taxonomic annotations to our MAGs
+* anvi-run-scg-taxonomy associates the single-copy core genes in contigs-db with taxnomy information
+
+### **Script (anvi-run-scg-taxonomy)**
+
+```
+#!/bin/bash
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=10G
+#SBATCH --time=1:00:00
+#SBATCH --job-name=anvi-run-scg-taxonomy
+#SBATCH --output=anvi-run-scg-taxonomy
+#SBATCH --error=anvi-run-scg-taxonomy
+#SBATCH --partition=all
+#SBATCH --reservation=biol217
+
+
+anvi-run-scg-taxonomy -c /work_beegfs/sunam232/Day5/contigs.db -T 20 -P 2
+
+```
+
+anvi-estimate-scg-taxonomy makes quick taxonomy estimates for genomes, metagenomes, or bins stored in contigs-db using single-copy core genes
+
+### **Script (anvi-estimate-scg-taxonomy)**
+our contigs contain multiple genomes which is why we use the metagenome-mode
+```
+#!/bin/bash
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=10G
+#SBATCH --time=1:00:00
+#SBATCH --job-name=anvi-estimate-scg-taxonomy
+#SBATCH --output=anvi-estimate-scg-taxonomy
+#SBATCH --error=anvi-estimate-scg-taxonomy
+#SBATCH --partition=all
+#SBATCH --reservation=biol217
+
+
+
+anvi-estimate-scg-taxonomy -c /work_beegfs/sunam232/Day5/contigs.db --metagenome-mode
+
+```
+
+one final summary:
+
+### **Script (anvi-summarize)**
+our contigs contain multiple genomes which is why we use the metagenome-mode
+```
+#!/bin/bash
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=10G
+#SBATCH --time=1:00:00
+#SBATCH --job-name=anvi-summarize
+#SBATCH --output=anvi-summarize
+#SBATCH --error=anvi-summarize
+#SBATCH --partition=all
+#SBATCH --reservation=biol217
+
+
+anvi-summarize -c /work_beegfs/sunam232/Day5/contigs.db -p /work_beegfs/sunam232/Day5/5_anvio_profiles/merged_profiles/PROFILE.db -C consolidated_bins -o SUMMARY_03 --just-do-it
+
+```
+
+#### Question 6
+
+Did you get a species assignment to the bins previously identified? Does the HIGH-QUALITY assignment of the bin need revision? hint: MIMAG quality tiers
+
+#### Answer 6
+Yes at Bin_Bin_1_sub is a species level at Bin_METABIT__25 is just genus level
+
+#### Question 7
+how abundant are the archaea bins in the 3 samples? (relative abundance) 
+
+#### Answer 7
+
+Bin_METABAT__25:
+
+    BGR_130305: 1.76
+    BGR_130527: 1.14
+    BGR_130708: 0.58
+
+Bin_Bin_1_sub
+
+    BGR_130305: 0.96
+    BGR_130527: 0.00
+    BGR_130708: 0.40
+
+
+# Day 6 - Start of Pangenomics 
+
+Data:
+* new set of cotigs.db
+* they contain MAGs from Biogasreactor and complete Methanogen Genome
+
+## Overview - visualize and compare the bins
+
+
+### Terminal 1
+
+```
+srun --reservation=biol217 --pty --mem=10G --nodes=1 --tasks-per-node=1 --
+cpus-per-task=1 /bin/bash
+
+conda activate /home/sunam225/miniconda3/miniconda4.9.2/usr/etc/profile.d/conda.sh/envs/anvio-7.1
+
+anvi-display-contigs-stats *db
+```
+### Terminal 2
+```
+ssh -L 8060:localhost:8080 sunam232@caucluster-old.rz.uni-kiel.de
+ssh -L 8080:localhost:8080 node010
+
+```
+### Firefox
+
+ http://127.0.0.1:8060
+
+#### Question 7
+
+How do the MAGs compare in size and number of contigs to the full genome?
+
+#### Answer 7
+![Table1](resources/genome_completeness.png)
+
+The full genome has just one contig with a length of 3,283,688. The MAGs have a number of contigs between 137 and 334. The legth of the different contigs is diverse between the different MAGs. There are a few with a length above 50 kb. The most are shorter than 5 kb.
+
+#### Question 8
+
+Based on the contig numbers, sizes and number of marker genes (HMM hits), which two MAGs are the best and which is the worst?
+
+#### Answer 8
+
+With the highest number of contigs but very short contigs Bin5 is the worst. The best ones are Bin13 (longest contigs and not many contigs and big genome) and Bin 19 (big genome and long contigs)
+
+
 
 
 
