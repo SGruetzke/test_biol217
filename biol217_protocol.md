@@ -58,6 +58,7 @@ cat test.txt test02.txt
 * https://ami-journals.onlinelibrary.wiley.com/doi/full/10.1111/1751-7915.13313
 * we focused on 3 samples in the course
 
+
 ## **Miniconda**
 needed packeges and programs were already installed into one conda environment which we activated:
  ```
